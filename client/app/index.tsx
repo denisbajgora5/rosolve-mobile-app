@@ -49,7 +49,7 @@ export default function RegisterPage() {
       </TouchableOpacity>
 
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => router.push('/select-role')}>
+        <TouchableOpacity onPress={() => router.push('./select-role')}>
           <Text style={styles.footerText}>register here</Text>
         </TouchableOpacity>
         <Text style={styles.footerText}>find my account</Text>
