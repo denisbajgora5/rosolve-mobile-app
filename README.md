@@ -1,4 +1,4 @@
-# 📱 Rosolve Taxi App 
+# 📱 Rosolve Taxi App
 
 ## 🚀 Getting Started
 
@@ -19,18 +19,17 @@ git clone https://github.com/denisbajgora5/rosolve-mobile-app.git
 # 2. Navigate into the project
 cd rosolve-mobile-app
 
-# 4. Install backend dependencies
-cd server
-npm install
-
-# 5. Install frontend dependencies
-cd ../client
-npm install
-
-# To start the client: 
+# 3. Install frontend/client dependencies
 cd client
+npm install
+
+# 4. To start the client (make sure you are in the client directory):
 npx expo start
 
-# To start the server run:
-cd server
-npm run dev 
+# 5. Install backend/server dependencies
+cd ../server
+npm install
+
+# To start the server run (make sure you are in the server directory):
+npm run dev
+```
