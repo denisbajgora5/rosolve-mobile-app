@@ -2,57 +2,50 @@ import React from 'react'
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native'
 import { router } from 'expo-router'
 
-export default function RegisterPage() {
+export default function UserSelectionPage() {
   return (
     <View style={styles.container}>
-      <View style={styles.menuIcon}>
-        <View style={styles.line} />
-        <View style={styles.line} />
-        <View style={styles.line} />
-      </View>
-
-      <View style={styles.logoContainer}>
-        <Text style={styles.logoText}>app logo</Text>
-      </View>
-
-      <View style={styles.phoneInputContainer}>
-        <View style={styles.countryCode}>
-          <Text style={styles.countryText}>🇮🇪 +353</Text>
+      {/* Logo Placeholder */}
+      <View style={styles.topSection}>
+        <View style={styles.logoPlaceholder}>
+          <Text style={styles.logoText}>Logo</Text>
         </View>
-        <TextInput
-          style={styles.phoneInput}
-          placeholder="1111111"
-          keyboardType="phone-pad"
-        />
       </View>
 
-      <TouchableOpacity style={styles.continueButton}>
-        <Text style={styles.buttonText}>continue</Text>
-      </TouchableOpacity>
+      {/* Content */}
+      <View style={styles.content}>
+        <Text style={styles.heading}>Create your account now!</Text>
 
-      <View style={styles.divider} />
-
-      <TouchableOpacity style={styles.oauthButton}>
-        <Text style={styles.buttonText}>continue with Google</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.oauthButton}>
-        <Text style={styles.buttonText}>continue with Apple</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.oauthButton}>
-        <Text style={styles.buttonText}>continue with email</Text>
-      </TouchableOpacity>
-
-      <View style={styles.footer}>
-        <TouchableOpacity onPress={() => router.push('./select-role')}>
-          <Text style={styles.footerText}>register here</Text>
+        <TouchableOpacity
+          style={styles.selectionButton}
+          onPress={() => router.push('/register')}
+        >
+          <Text style={styles.buttonText}>
+            I'm a <Text style={styles.bold}>Passenger</Text>
+          </Text>
         </TouchableOpacity>
-        <Text style={styles.footerText}>find my account</Text>
+
+        <TouchableOpacity style={styles.selectionButton}>
+          <Text style={styles.buttonText}>
+            I'm a <Text style={styles.bold}>Driver</Text>
+          </Text>
+        </TouchableOpacity>
+
+        <Text style={styles.linkText}>
+          need an account for both?{' '}
+          <Text style={styles.clickable}>click here</Text>
+        </Text>
+
+        <View style={styles.divider} />
+
+        <Text style={styles.footer}>
+          Terms & Conditions apply. Lorem ipsum etc etc etc. Copyright Rooslove Ltd.
+        </Text>
       </View>
     </View>
   )
@@ -61,91 +54,71 @@ export default function RegisterPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#000',
+  },
+  topSection: {
+    backgroundColor: '#9E2A45',
     alignItems: 'center',
-    paddingTop: 60,
-    paddingHorizontal: 20,
+    paddingTop: 80,
+    paddingBottom: 40,
   },
-  menuIcon: {
-    position: 'absolute',
-    top: 40,
-    left: 20,
-  },
-  line: {
-    width: 24,
-    height: 2,
-    backgroundColor: '#8B1C3D',
-    marginVertical: 2,
-  },
-  logoContainer: {
+  logoPlaceholder: {
     width: 80,
     height: 80,
+    borderRadius: 40,
     backgroundColor: '#D3D3D3',
-    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 30,
   },
   logoText: {
     fontSize: 12,
     color: '#555',
   },
-  phoneInputContainer: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 10,
-  },
-  countryCode: {
-    backgroundColor: '#E0E0E0',
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    justifyContent: 'center',
-  },
-  countryText: {
-    fontSize: 14,
-  },
-  phoneInput: {
+  content: {
     flex: 1,
-    backgroundColor: '#E0E0E0',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 14,
-  },
-  continueButton: {
-    backgroundColor: '#D3D3D3',
-    paddingVertical: 12,
-    borderRadius: 12,
-    width: '100%',
+    backgroundColor: '#fff',
     alignItems: 'center',
-    marginBottom: 12,
+    paddingHorizontal: 20,
+    paddingTop: 30,
+  },
+  heading: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 30,
+  },
+  selectionButton: {
+    width: '100%',
+    backgroundColor: '#E6E6E6',
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: '#000',
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
+  linkText: {
+    fontSize: 13,
+    color: '#444',
+    marginTop: 12,
+  },
+  clickable: {
+    textDecorationLine: 'underline',
+    fontWeight: 'bold',
   },
   divider: {
     height: 1,
-    width: '100%',
-    backgroundColor: '#999',
-    marginVertical: 10,
-  },
-  oauthButton: {
-    backgroundColor: '#D3D3D3',
-    paddingVertical: 12,
-    borderRadius: 12,
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  buttonText: {
-    fontSize: 14,
-    fontWeight: '500',
+    width: '80%',
+    backgroundColor: '#CCC',
+    marginVertical: 20,
   },
   footer: {
-    marginTop: 30,
-    alignItems: 'center',
-  },
-  footerText: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 4,
+    fontSize: 12,
+    color: '#777',
+    textAlign: 'center',
   },
 })
