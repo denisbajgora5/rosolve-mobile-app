@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   View,
   Text,
@@ -8,6 +8,23 @@ import {
 import { router } from 'expo-router'
 
 export default function UserSelectionPage() {
+  const [fetchedValue, setFetchedValue] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchValue = async () => {
+      try {
+        const response = await fetch('http://192.168.1.3:3001/api/value')
+        const data = await response.json()
+        setFetchedValue(data.value)
+      } catch (error) {
+        setFetchedValue("Express Server Status: FAILURE!!")
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    fetchValue()
+  }, [])
+
   return (
     <View style={styles.container}>
       {/* Logo Placeholder */}
@@ -42,6 +59,11 @@ export default function UserSelectionPage() {
         </Text>
 
         <View style={styles.divider} />
+
+        {/* Display fetched value from backend */}
+        {fetchedValue && (
+          <Text style={styles.fetchedText}>{fetchedValue}</Text>
+        )}
 
         <Text style={styles.footer}>
           Terms & Conditions apply. Lorem ipsum etc etc etc. Copyright Rooslove Ltd.
@@ -115,6 +137,12 @@ const styles = StyleSheet.create({
     width: '80%',
     backgroundColor: '#CCC',
     marginVertical: 20,
+  },
+  fetchedText: {
+    fontSize: 14,
+    color: '#9E2A45',
+    marginBottom: 10,
+    fontWeight: 'bold',
   },
   footer: {
     fontSize: 12,
