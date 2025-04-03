@@ -1,14 +1,35 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Image,
+  TextStyle,
+  ViewStyle,
 } from 'react-native'
 import { router } from 'expo-router'
 
-export default function RegisterPage() {
+export default function RegisterPage(): JSX.Element {
+  const [phoneNumber, setPhoneNumber] = useState<string>('')
+
+  const handlePhoneInput = (text: string) => {
+    const digitsOnly = text.replace(/[^0-9]/g, '')
+    setPhoneNumber(digitsOnly)
+  }
+
+  const handleCreateAccount = () => {
+    const irishPhoneRegex = /^8[3-9][0-9]{7}$/
+    const isValid = irishPhoneRegex.test(phoneNumber)
+
+    if (isValid) {
+      router.push('/profile-name')
+    } else {
+      alert('Please enter a valid Irish mobile number')
+    }
+  }
+
   return (
     <View style={styles.container}>
       {/* Logo Placeholder */}
@@ -26,13 +47,15 @@ export default function RegisterPage() {
         </View>
         <TextInput
           style={styles.phoneInput}
-          placeholder="0858446755"
-          keyboardType="phone-pad"
+          placeholder="858446755"
+          keyboardType="number-pad"
+          value={phoneNumber}
+          onChangeText={handlePhoneInput}
         />
       </View>
 
       {/* Create Account Button */}
-      <TouchableOpacity style={styles.createButton}>
+      <TouchableOpacity style={styles.createButton} onPress={handleCreateAccount}>
         <Text style={styles.createButtonText}>Create account</Text>
       </TouchableOpacity>
 
@@ -40,10 +63,23 @@ export default function RegisterPage() {
 
       {/* OAuth Buttons */}
       <TouchableOpacity style={styles.oauthButton}>
-        <Text style={styles.oauthText}>Log in with Google</Text>
+        <View style={styles.oauthContent}>
+          <Image
+            source={require('../assets/images/google.png')}
+            style={styles.oauthIcon}
+          />
+          <Text style={styles.oauthText}>Log in with Google</Text>
+        </View>
       </TouchableOpacity>
+
       <TouchableOpacity style={styles.oauthButton}>
-        <Text style={styles.oauthText}>Log in with Facebook</Text>
+        <View style={styles.oauthContent}>
+          <Image
+            source={require('../assets/images/facebook.png')}
+            style={styles.oauthIcon}
+          />
+          <Text style={styles.oauthText}>Log in with Facebook</Text>
+        </View>
       </TouchableOpacity>
 
       {/* Footer */}
@@ -54,7 +90,11 @@ export default function RegisterPage() {
   )
 }
 
-const styles = StyleSheet.create({
+type Style = {
+  [key: string]: ViewStyle | TextStyle
+}
+
+const styles = StyleSheet.create<Style>({
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -121,18 +161,31 @@ const styles = StyleSheet.create({
   orText: {
     fontSize: 14,
     color: '#999',
-    marginBottom: 10,
+    marginBottom: 14,
   },
   oauthButton: {
     backgroundColor: '#E6E6E6',
     width: '100%',
-    paddingVertical: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
     borderRadius: 12,
+    marginBottom: 12,
+  },
+  oauthContent: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    justifyContent: 'center',  // ✅ Center text+icon horizontally
+    position: 'relative',
+  },
+  oauthIcon: {
+    position: 'absolute',
+    left: 0,                   // ✅ Keep icon to the far left
+    width: 24,
+    height: 24,
+    resizeMode: 'contain',
   },
   oauthText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '500',
   },
   footerText: {
