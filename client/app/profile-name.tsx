@@ -14,7 +14,7 @@ export default function ProfileNameScreen() {
 
   const handleContinue = () => {
     // You can add validation or send data later
-    router.push('/next-step') // placeholder for next screen
+    router.push('/profile-verification')
   }
 
   return (
