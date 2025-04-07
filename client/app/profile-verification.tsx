@@ -106,6 +106,9 @@ const styles = StyleSheet.create<Style>({
     fontSize: 11,
     color: '#777',
     textAlign: 'center',
-    marginTop: 12,
+    marginTop: 'auto',      // Pushes it to the bottom of the screen
+    marginBottom: 24,       // Adds breathing room from bottom
+    alignSelf: 'center',    // Horizontally center it
+    width: '90%',
   },  
 })
