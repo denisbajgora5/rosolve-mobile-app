@@ -49,7 +49,7 @@ export default function UserSelectionPage() {
 
         <TouchableOpacity
           style={styles.selectionButton}
-          onPress={() => router.push('/driver-registration')}
+          onPress={() => router.push('./driver-registration')}
         >
           <Text style={styles.buttonText}>
             I'm a <Text style={styles.bold}>Driver</Text>
