@@ -13,7 +13,7 @@ export default function UserSelectionPage() {
   useEffect(() => {
     const fetchValue = async () => {
       try {
-        const response = await fetch('http://192.168.1.3:3001/api/value')
+        const response = await fetch('http://192.168.1.8:5000/api/value')
         const data = await response.json()
         setFetchedValue(data.value)
       } catch (error) {
