@@ -47,11 +47,15 @@ export default function UserSelectionPage() {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.selectionButton}>
+        <TouchableOpacity
+          style={styles.selectionButton}
+          onPress={() => router.push('/driver-registration')}
+        >
           <Text style={styles.buttonText}>
             I'm a <Text style={styles.bold}>Driver</Text>
           </Text>
         </TouchableOpacity>
+
 
         <Text style={styles.linkText}>
           need an account for both?{' '}
