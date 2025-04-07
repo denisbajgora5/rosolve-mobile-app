@@ -106,8 +106,6 @@ const styles = StyleSheet.create<Style>({
     fontSize: 11,
     color: '#777',
     textAlign: 'center',
-    position: 'absolute',
-    bottom: 20,
-    width: '100%',
-  },
+    marginTop: 12,
+  },  
 })
