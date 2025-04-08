@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   View,
   Text,
@@ -7,51 +7,13 @@ import {
   TextStyle,
   ViewStyle,
   Image,
-  Alert,
 } from 'react-native'
-import * as ImagePicker from 'expo-image-picker'
-import { router } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 
 export default function ProfileVerification(): JSX.Element {
-  const userFullName = 'Jane Doe'
-
-  // Track uploaded files
-  const [passportImage, setPassportImage] = useState<string | null>(null)
-  const [idCardImage, setIdCardImage] = useState<string | null>(null)
-
-  const handleDocumentUpload = async (type: 'passport' | 'id') => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync()
-    if (status !== 'granted') {
-      alert('Camera permission is required to verify your identity.')
-      return
-    }
-
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 0.8,
-    })
-
-    if (!result.canceled && result.assets?.length > 0) {
-      const imageUri = result.assets[0].uri
-      if (type === 'passport') {
-        setPassportImage(imageUri)
-        Alert.alert('Success', 'Passport uploaded successfully ✅')
-      } else {
-        setIdCardImage(imageUri)
-        Alert.alert('Success', 'ID card uploaded successfully ✅')
-      }
-    }
-  }
-
-  const handleVerify = () => {
-    if (passportImage || idCardImage) {
-      Alert.alert('Verification Complete', 'Thank you for verifying your identity!')
-      // router.push('/next-step') // TODO: move forward in flow
-    } else {
-      Alert.alert('Incomplete', 'Please upload either a passport or ID card to continue.')
-    }
-  }
+  const { userData } = useLocalSearchParams()
+  const user = userData ? JSON.parse(userData as string) : { firstName: '', lastName: '' }
+  const userFullName = `${user.firstName} ${user.lastName}`.trim() || 'User'
 
   return (
     <View style={styles.container}>
@@ -61,43 +23,26 @@ export default function ProfileVerification(): JSX.Element {
 
       <Text style={styles.subHeading}>Account Verification*</Text>
 
-      <TouchableOpacity
-        style={styles.verifyButton}
-        onPress={() => handleDocumentUpload('passport')}
-      >
-        <Text style={styles.verifyText}>
-          {passportImage ? 'Passport uploaded ✔️' : 'Verify with passport'}
-        </Text>
+      <TouchableOpacity style={styles.verifyButton}>
+        <Text style={styles.verifyText}>Verify with passport</Text>
         <Image
           source={require('../assets/images/camera.png')}
           style={styles.cameraIcon}
         />
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.verifyButton}
-        onPress={() => handleDocumentUpload('id')}
-      >
-        <Text style={styles.verifyText}>
-          {idCardImage ? 'ID card uploaded ✔️' : 'Verify with ID card'}
-        </Text>
+      <TouchableOpacity style={styles.verifyButton}>
+        <Text style={styles.verifyText}>Verify with ID card</Text>
         <Image
           source={require('../assets/images/camera.png')}
           style={styles.cameraIcon}
         />
       </TouchableOpacity>
 
-      {/* Submit Verification */}
-      <TouchableOpacity style={styles.submitButton} onPress={handleVerify}>
-        <Text style={styles.submitText}>Continue</Text>
-      </TouchableOpacity>
-
-      {/* Info Text */}
       <Text style={styles.noteText}>
         *Verification is <Text style={styles.bold}>mandatory</Text> for account creation. If you cannot verify with the above methods please contact us <Text style={styles.link}>here</Text> and we’ll do our best to help.
       </Text>
 
-      {/* Footer */}
       <Text style={styles.footer}>
         All data collected is stored privately and only used to protect the safety of you and others. © Team Rosolve.
       </Text>
@@ -145,18 +90,6 @@ const styles = StyleSheet.create<Style>({
     width: 28,
     height: 28,
     resizeMode: 'contain',
-  },
-  submitButton: {
-    backgroundColor: '#9E2A45',
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  submitText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
   },
   noteText: {
     fontSize: 12,
