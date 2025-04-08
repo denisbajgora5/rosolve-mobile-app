@@ -27,21 +27,50 @@ export default function ProfileNameScreen() {
     lastName.trim() !== '' &&
     isValidEmail(email)
 
-  const handleContinue = () => {
-    const userData = {
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
+    const handleContinue = () => {
+      const userData = {
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+      }
+    
+      // ✅ Log the userData object
+      console.log('User Data:', userData)
+    
+      router.push({
+        pathname: '/profile-verification',
+        params: {
+          userData: JSON.stringify(userData),
+        },
+      })
     }
-
-    router.push({
-      pathname: '/profile-verification',
-      params: {
-        userData: JSON.stringify(userData),
-      },
-    })
-  }
+    
+    //   -- POST DATA TO EXPRESS SAMPLE CODE --
+    //   try {
+    //     const response = await fetch('http://<YOUR_LOCAL_IP>:3001/api/register', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //       body: JSON.stringify(userData),
+    //     })
+    
+    //     const result = await response.json()
+    //     console.log('Server response:', result)
+    
+    //     router.push({
+    //       pathname: '/profile-verification',
+    //       params: {
+    //         userData: JSON.stringify(userData),
+    //       },
+    //     })
+    //   } catch (error) {
+    //     console.error('Error sending to backend:', error)
+    //     alert('Something went wrong. Please try again.')
+    //   }
+    // }
+    
 
   return (
     <View style={styles.container}>
