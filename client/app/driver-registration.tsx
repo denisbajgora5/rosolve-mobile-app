@@ -7,8 +7,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  TextStyle,
-  ViewStyle,
 } from 'react-native'
 
 export default function DriverRegistration(): JSX.Element {
@@ -16,26 +14,39 @@ export default function DriverRegistration(): JSX.Element {
   const [email, setEmail] = useState('')
   const [city, setCity] = useState('')
 
-
   const handleRegister = () => {
+    // Check if any field is empty
     if (!phone || !email || !city) {
       alert('Please fill out all fields')
       return
     }
-  
-    // Proceed to next screen
-    router.push('/driver-profile-details')
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address')
+      return
+    }
+
+    // Navigate to the profile details screen with parameters
+    router.push({
+      pathname: '/driver-profile-details',
+      params: {
+        phoneNumber: phone,
+        email: email,
+        city: city,
+      },
+    })
   }
-  
 
   return (
     <View style={styles.container}>
-      {/* Logo Placeholder (replacing driver header) */}
+      {/* Logo Placeholder */}
       <View style={styles.logoPlaceholder}>
         <Text style={styles.logoText}>Logo</Text>
       </View>
 
-      {/* Number Field */}
+      {/* Phone Field */}
       <Text style={styles.label}>Enter your number here</Text>
       <View style={styles.inputRow}>
         <Text style={styles.flag}>🇮🇪 +353</Text>
@@ -61,6 +72,7 @@ export default function DriverRegistration(): JSX.Element {
           keyboardType="email-address"
           value={email}
           onChangeText={setEmail}
+          autoCapitalize="none"
         />
       </View>
 
@@ -87,11 +99,7 @@ export default function DriverRegistration(): JSX.Element {
   )
 }
 
-type Style = {
-  [key: string]: ViewStyle | TextStyle
-}
-
-const styles = StyleSheet.create<Style>({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',

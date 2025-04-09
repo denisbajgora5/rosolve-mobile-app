@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { router } from 'expo-router'
 
 export default function UserSelectionPage() {
@@ -13,11 +8,11 @@ export default function UserSelectionPage() {
   useEffect(() => {
     const fetchValue = async () => {
       try {
-        const response = await fetch('http://192.168.1.8:5000/api/value')
+        const response = await fetch('http://10.156.32.90:5001/api/value')
         const data = await response.json()
         setFetchedValue(data.value)
       } catch (error) {
-        setFetchedValue("Express Server Status: FAILURE!!")
+        setFetchedValue('Express Server Status: FAILURE!!')
         console.error('Error fetching data:', error)
       }
     }
@@ -40,8 +35,7 @@ export default function UserSelectionPage() {
 
         <TouchableOpacity
           style={styles.selectionButton}
-          onPress={() => router.push('/register')}
-        >
+          onPress={() => router.push('/register')}>
           <Text style={styles.buttonText}>
             I'm a <Text style={styles.bold}>Passenger</Text>
           </Text>
@@ -49,13 +43,11 @@ export default function UserSelectionPage() {
 
         <TouchableOpacity
           style={styles.selectionButton}
-          onPress={() => router.push('./driver-registration')}
-        >
+          onPress={() => router.push('./driver-registration')}>
           <Text style={styles.buttonText}>
             I'm a <Text style={styles.bold}>Driver</Text>
           </Text>
         </TouchableOpacity>
-
 
         <Text style={styles.linkText}>
           need an account for both?{' '}
@@ -65,12 +57,11 @@ export default function UserSelectionPage() {
         <View style={styles.divider} />
 
         {/* Display fetched value from backend */}
-        {fetchedValue && (
-          <Text style={styles.fetchedText}>{fetchedValue}</Text>
-        )}
+        {fetchedValue && <Text style={styles.fetchedText}>{fetchedValue}</Text>}
 
         <Text style={styles.footer}>
-          Terms & Conditions apply. Lorem ipsum etc etc etc. Copyright Rooslove Ltd.
+          Terms & Conditions apply. Lorem ipsum etc etc etc. Copyright Rooslove
+          Ltd.
         </Text>
       </View>
     </View>

@@ -5,10 +5,10 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  TextStyle,
-  ViewStyle,
+  Alert,
 } from 'react-native'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
+import { API_BASE_URL } from '../lib/config'
 
 export default function DriverProfileDetails(): JSX.Element {
   const [firstName, setFirstName] = useState('')
@@ -17,14 +17,45 @@ export default function DriverProfileDetails(): JSX.Element {
   const [driverLicence, setDriverLicence] = useState('')
   const [taxiLicence, setTaxiLicence] = useState('')
 
-  const handleContinue = () => {
+  // Get params passed from previous screen
+  const { phoneNumber, email, city } = useLocalSearchParams()
+
+  const handleContinue = async () => {
     if (!firstName || !lastName || !carReg || !driverLicence || !taxiLicence) {
-      alert('Please fill in all fields.')
+      Alert.alert('Please fill in all required fields')
       return
     }
 
-    alert('Driver profile submitted!')
-    // router.push('/next-step')
+    const payload = {
+      phoneNumber,
+      email,
+      city,
+      firstName,
+      lastName,
+      driverLicense: driverLicence,
+      taxiNumber: taxiLicence,
+      pfp: 'https://default-avatar.png',
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/driver/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        Alert.alert('Registration Successful', 'Welcome to the platform!')
+        router.replace('/')
+      } else {
+        Alert.alert('Registration Failed', data.error || 'Server error')
+      }
+    } catch (err) {
+      console.error(err)
+      Alert.alert('Network Error', 'Unable to connect to the server')
+    }
   }
 
   return (
@@ -64,7 +95,7 @@ export default function DriverProfileDetails(): JSX.Element {
         />
 
         <Text style={styles.label}>
-          Drivers Licence <Text style={styles.required}>*</Text>
+          Driver Licence <Text style={styles.required}>*</Text>
         </Text>
         <TextInput
           style={styles.input}
@@ -89,11 +120,7 @@ export default function DriverProfileDetails(): JSX.Element {
   )
 }
 
-type Style = {
-  [key: string]: ViewStyle | TextStyle
-}
-
-const styles = StyleSheet.create<Style>({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
