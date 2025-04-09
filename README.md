@@ -33,3 +33,19 @@ npm install
 # To start the server run (make sure you are in the server directory):
 npm run dev
 ```
+## ⚙️ Environment Configuration
+
+Create a .env file in the project root with the following contents:
+
+EXPRESS_SERVER_IP=<YOUR_LOCAL_IP_ADDRESS>
+EXPRESS_SERVER_PORT=<YOUR_PORT_NUMBER>
+
+    🔐 Note:
+    Replace <YOUR_LOCAL_IP_ADDRESS> with your machine’s private IP (e.g., 192.168.1.10).
+    Replace <YOUR_PORT_NUMBER> with your desired server port (e.g., 5000).
+
+    To find your local IP:
+
+        Windows: ipconfig
+
+        macOS/Linux: ifconfig
