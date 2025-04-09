@@ -6,22 +6,23 @@ import dotenv from 'dotenv'
 import connectDB from './config/db'
 import driverRoutes from './routes/driver'
 
+// Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../../.env') })
 
 const app = express()
 const PORT = process.env.EXPRESS_SERVER_PORT || 5001
 
-app.use(cors({ origin: '*' })) // 可以改成允许所有或你 Expo 的地址
-app.use(express.json()) // 👈 支持 JSON 请求体
+app.use(cors({ origin: '*' })) // You can allow all origins or restrict to your Expo address
+app.use(express.json()) // 👈 Enable JSON body parsing
 
-connectDB() // ✅ 初始化数据库连接
+connectDB() // ✅ Initialize MongoDB connection
 
-// 测试接口
+// Test endpoint
 app.get('/api/value', (req, res) => {
   res.json({ value: 'Express Server Status: WORKING!' })
 })
 
-// 注册司机路由
+// Driver registration routes
 app.use('/api/driver', driverRoutes)
 
 app.listen(PORT, () => {
