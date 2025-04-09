@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
+import { Alert } from 'react-native'
 
 export default function ProfileNameScreen() {
   const {
@@ -36,41 +37,44 @@ export default function ProfileNameScreen() {
       }
     
       // ✅ Log the userData object
-      console.log('User Data:', userData)
+    //   console.log('User Data:', userData)
     
-      router.push({
-        pathname: '/profile-verification',
-        params: {
-          userData: JSON.stringify(userData),
-        },
-      })
-    }
-    
-    //   -- POST DATA TO EXPRESS SAMPLE CODE --
-    //   try {
-    //     const response = await fetch('http://<YOUR_LOCAL_IP>:3001/api/register', {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //       body: JSON.stringify(userData),
-    //     })
-    
-    //     const result = await response.json()
-    //     console.log('Server response:', result)
-    
-    //     router.push({
-    //       pathname: '/profile-verification',
-    //       params: {
-    //         userData: JSON.stringify(userData),
-    //       },
-    //     })
-    //   } catch (error) {
-    //     console.error('Error sending to backend:', error)
-    //     alert('Something went wrong. Please try again.')
-    //   }
+    //   router.push({
+    //     pathname: '/profile-verification',
+    //     params: {
+    //       userData: JSON.stringify(userData),
+    //     },
+    //   })
     // }
     
+    try {
+      const response = await fetch('http://10.156.26.108:5001/api/passenger/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      })
+    
+      const result = await response.json()
+      console.log('Server response:', result)
+    
+      if (response.ok && result.success) {
+        Alert.alert('Success ✅', 'Signup successful!')
+    
+        router.push({
+          pathname: '/profile-verification',
+          params: {
+            userData: JSON.stringify(userData),
+          },
+        })
+      } else {
+        Alert.alert('Signup Failed ❌', result.message || 'Something went wrong.')
+      }
+    } catch (error) {
+      console.error('Error sending to backend:', error)
+      Alert.alert('Network Error', 'Something went wrong. Please try again.')
+    }
 
   return (
     <View style={styles.container}>
