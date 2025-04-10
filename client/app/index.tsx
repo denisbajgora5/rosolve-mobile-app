@@ -13,7 +13,7 @@ export default function UserSelectionPage() {
   useEffect(() => {
     const fetchValue = async () => {
       try {
-        const response = await fetch('http://192.168.1.8:5000/api/value')
+        const response = await fetch('http://10.156.0.199:5001/api/value')
         const data = await response.json()
         setFetchedValue(data.value)
       } catch (error) {
@@ -38,6 +38,8 @@ export default function UserSelectionPage() {
       <View style={styles.content}>
         <Text style={styles.heading}>Create your account now!</Text>
 
+        
+
         <TouchableOpacity
           style={styles.selectionButton}
           onPress={() => router.push('/register')}
@@ -54,6 +56,14 @@ export default function UserSelectionPage() {
           <Text style={styles.buttonText}>
             I'm a <Text style={styles.bold}>Driver</Text>
           </Text>
+        </TouchableOpacity>
+
+              {/* ➕ Test button to go to homepage */}
+        <TouchableOpacity
+          style={[styles.selectionButton, { backgroundColor: '#802d41' }]}
+          onPress={() => router.push('/homepage')}
+        >
+          <Text style={[styles.buttonText, { color: '#fff' }]}>Go to HomePage (Test)</Text>
         </TouchableOpacity>
 
 
@@ -74,6 +84,8 @@ export default function UserSelectionPage() {
         </Text>
       </View>
     </View>
+
+    
   )
 }
 
