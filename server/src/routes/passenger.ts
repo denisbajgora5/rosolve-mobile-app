@@ -7,13 +7,13 @@ const router = express.Router()
 let nextPassengerId = 1
 
 router.post('/register', async (req, res) => {
+  console.log(req.body);
   try {
     const {
       phoneNumber,
       firstName,
       lastName,
       email,
-      pfp,
     } = req.body
 
     const newPassenger = new Passenger({
@@ -22,7 +22,7 @@ router.post('/register', async (req, res) => {
       firstName,
       lastName,
       email,
-      pfp,
+      pfp: "None",
       createdAt: new Date(),
       updatedAt: new Date(),
       rating: 5, // or whatever default you want
