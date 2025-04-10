@@ -47,34 +47,36 @@ export default function ProfileNameScreen() {
     //   })
     // }
     
-    try {
-      const response = await fetch('http://10.156.26.108:5001/api/passenger/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      })
-    
-      const result = await response.json()
-      console.log('Server response:', result)
-    
-      if (response.ok && result.success) {
-        Alert.alert('Success ✅', 'Signup successful!')
-    
-        router.push({
-          pathname: '/profile-verification',
-          params: {
-            userData: JSON.stringify(userData),
+    const handleContinue = async () => {
+      try {
+        const response = await fetch('http://10.156.26.108:5001/api/passenger/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
+          body: JSON.stringify(userData),
         })
-      } else {
-        Alert.alert('Signup Failed ❌', result.message || 'Something went wrong.')
+    
+        const result = await response.json()
+        console.log('Server response:', result)
+    
+        if (response.ok && result.success) {
+          alert('Signup successful!')
+          router.push({
+            pathname: '/passenger-side/profile-verification',
+            params: {
+              userData: JSON.stringify(userData),
+            },
+          })
+        } else {
+          alert(result.message || 'Signup failed')
+        }
+      } catch (error) {
+        console.error('Error sending to backend:', error)
+        alert('Something went wrong. Please try again.')
       }
-    } catch (error) {
-      console.error('Error sending to backend:', error)
-      Alert.alert('Network Error', 'Something went wrong. Please try again.')
     }
+    
 
   return (
     <View style={styles.container}>
@@ -173,3 +175,4 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
 })
+}

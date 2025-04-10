@@ -26,7 +26,7 @@ export default function ProfileVerification(): JSX.Element {
       <TouchableOpacity style={styles.verifyButton}>
         <Text style={styles.verifyText}>Verify with passport</Text>
         <Image
-          source={require('../assets/images/camera.png')}
+          source={require('../../assets/images/camera.png')}
           style={styles.cameraIcon}
         />
       </TouchableOpacity>
@@ -34,7 +34,7 @@ export default function ProfileVerification(): JSX.Element {
       <TouchableOpacity style={styles.verifyButton}>
         <Text style={styles.verifyText}>Verify with ID card</Text>
         <Image
-          source={require('../assets/images/camera.png')}
+          source={require('../../assets/images/camera.png')}
           style={styles.cameraIcon}
         />
       </TouchableOpacity>

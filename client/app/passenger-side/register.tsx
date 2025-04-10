@@ -46,7 +46,7 @@ export default function RegisterPage(): JSX.Element {
   const handleCreateAccount = () => {
     if (isPhoneValid(phoneNumber)) {
       router.push({
-        pathname: '/profile-name',
+        pathname: '/passenger-side/profile-name',
         params: {
           phoneNumber,
         },
@@ -71,7 +71,7 @@ export default function RegisterPage(): JSX.Element {
         const [first, last] = user.name.split(' ')
 
         router.push({
-          pathname: '/profile-name',
+          pathname: '/passenger-side/profile-name',
           params: {
             firstName: first,
             lastName: last,
@@ -94,7 +94,7 @@ export default function RegisterPage(): JSX.Element {
         const [first, last] = user.name.split(' ')
 
         router.push({
-          pathname: '/profile-name',
+          pathname: '/passenger-side/profile-name',
           params: {
             firstName: first,
             lastName: last,
@@ -137,14 +137,14 @@ export default function RegisterPage(): JSX.Element {
 
       <TouchableOpacity style={styles.oauthButton} onPress={() => promptGoogle()}>
         <View style={styles.oauthContent}>
-          <Image source={require('../assets/images/google.png')} style={styles.oauthIcon} />
+          <Image source={require('../../assets/images/google.png')} style={styles.oauthIcon} />
           <Text style={styles.oauthText}>Log in with Google</Text>
         </View>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.oauthButton} onPress={() => promptFacebook()}>
         <View style={styles.oauthContent}>
-          <Image source={require('../assets/images/facebook.png')} style={styles.oauthIcon} />
+          <Image source={require('../../assets/images/facebook.png')} style={styles.oauthIcon} />
           <Text style={styles.oauthText}>Log in with Facebook</Text>
         </View>
       </TouchableOpacity>

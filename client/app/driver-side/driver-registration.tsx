@@ -24,7 +24,7 @@ export default function DriverRegistration(): JSX.Element {
     }
   
     // Proceed to next screen
-    router.push('/driver-profile-details')
+    router.push('/driver-side/driver-profile-details')
   }
   
 
@@ -52,7 +52,7 @@ export default function DriverRegistration(): JSX.Element {
       <Text style={styles.label}>Enter your email here</Text>
       <View style={styles.inputRow}>
         <Image
-          source={require('../assets/images/email.png')}
+          source={require('../../assets/images/email.png')}
           style={styles.icon}
         />
         <TextInput
@@ -68,7 +68,7 @@ export default function DriverRegistration(): JSX.Element {
       <Text style={styles.label}>City</Text>
       <View style={styles.inputRow}>
         <Image
-          source={require('../assets/images/pin.png')}
+          source={require('../../assets/images/pin.png')}
           style={styles.icon}
         />
         <TextInput

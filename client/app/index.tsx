@@ -40,7 +40,7 @@ export default function UserSelectionPage() {
 
         <TouchableOpacity
           style={styles.selectionButton}
-          onPress={() => router.push('/register')}
+          onPress={() => router.push('/passenger-side/register')}
         >
           <Text style={styles.buttonText}>
             I'm a <Text style={styles.bold}>Passenger</Text>
@@ -49,7 +49,7 @@ export default function UserSelectionPage() {
 
         <TouchableOpacity
           style={styles.selectionButton}
-          onPress={() => router.push('./driver-registration')}
+          onPress={() => router.push('./diver-side/driver-registration')}
         >
           <Text style={styles.buttonText}>
             I'm a <Text style={styles.bold}>Driver</Text>
