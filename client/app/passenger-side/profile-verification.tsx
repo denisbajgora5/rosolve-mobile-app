@@ -12,7 +12,22 @@ import { useLocalSearchParams } from 'expo-router'
 
 export default function ProfileVerification(): JSX.Element {
   const { userData } = useLocalSearchParams()
-  const user = userData ? JSON.parse(userData as string) : { firstName: '', lastName: '' }
+
+  let user = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+  }
+
+  try {
+    if (userData) {
+      user = JSON.parse(userData as string)
+    }
+  } catch (err) {
+    console.warn('Invalid userData received in profile-verification:', err)
+  }
+
   const userFullName = `${user.firstName} ${user.lastName}`.trim() || 'User'
 
   return (

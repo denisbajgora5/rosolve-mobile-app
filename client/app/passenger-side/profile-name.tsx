@@ -5,9 +5,9 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
-import { Alert } from 'react-native'
 
 export default function ProfileNameScreen() {
   const {
@@ -21,62 +21,50 @@ export default function ProfileNameScreen() {
   const [email, setEmail] = useState('')
   const phoneNumber = paramPhoneNumber
 
-  const isValidEmail = (email: string) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email)
+  const isValidEmail = (email: string) =>
+    /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email)
 
   const isFormValid =
     firstName.trim() !== '' &&
     lastName.trim() !== '' &&
     isValidEmail(email)
 
-    const handleContinue = () => {
-      const userData = {
-        firstName,
-        lastName,
-        email,
-        phoneNumber,
-      }
-    
-      // ✅ Log the userData object
-    //   console.log('User Data:', userData)
-    
-    //   router.push({
-    //     pathname: '/profile-verification',
-    //     params: {
-    //       userData: JSON.stringify(userData),
-    //     },
-    //   })
-    // }
-    
-    const handleContinue = async () => {
-      try {
-        const response = await fetch('http://10.156.26.108:5001/api/passenger/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userData),
-        })
-    
-        const result = await response.json()
-        console.log('Server response:', result)
-    
-        if (response.ok && result.success) {
-          alert('Signup successful!')
-          router.push({
-            pathname: '/passenger-side/profile-verification',
-            params: {
-              userData: JSON.stringify(userData),
-            },
-          })
-        } else {
-          alert(result.message || 'Signup failed')
-        }
-      } catch (error) {
-        console.error('Error sending to backend:', error)
-        alert('Something went wrong. Please try again.')
-      }
+  const handleContinue = async () => {
+    const userData = {
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
     }
-    
+
+    try {
+      const response = await fetch('http://10.156.26.108:5001/api/passenger/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      })
+
+      const result = await response.json()
+      console.log('Server response:', result)
+
+      if (response.ok && result.success) {
+        alert('Signup successful!')
+        router.push({
+          pathname: '/passenger-side/profile-verification',
+          params: {
+            userData: JSON.stringify(userData),
+          },
+        })
+      } else {
+        alert(result.message || 'Signup failed')
+      }
+    } catch (error) {
+      console.error('Error sending to backend:', error)
+      alert('Something went wrong. Please try again.')
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -175,4 +163,3 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
 })
-}
