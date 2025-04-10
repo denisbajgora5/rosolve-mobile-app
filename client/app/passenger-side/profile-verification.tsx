@@ -7,8 +7,10 @@ import {
   TextStyle,
   ViewStyle,
   Image,
+  Alert,
 } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
+import * as ImagePicker from 'expo-image-picker'
 
 export default function ProfileVerification(): JSX.Element {
   const { userData } = useLocalSearchParams()
@@ -30,6 +32,25 @@ export default function ProfileVerification(): JSX.Element {
 
   const userFullName = `${user.firstName} ${user.lastName}`.trim() || 'User'
 
+  const launchCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync()
+    if (status !== 'granted') {
+      Alert.alert('Permission denied', 'Camera access is required for verification.')
+      return
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.7,
+    })
+
+    if (!result.canceled) {
+      const imageUri = result.assets[0].uri
+      console.log('Captured Image URI:', imageUri)
+      Alert.alert('Photo captured', 'Now send this to your OCR backend or process it.')
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
@@ -38,20 +59,14 @@ export default function ProfileVerification(): JSX.Element {
 
       <Text style={styles.subHeading}>Account Verification*</Text>
 
-      <TouchableOpacity style={styles.verifyButton}>
+      <TouchableOpacity style={styles.verifyButton} onPress={launchCamera}>
         <Text style={styles.verifyText}>Verify with passport</Text>
-        <Image
-          source={require('../../assets/images/camera.png')}
-          style={styles.cameraIcon}
-        />
+        <Image source={require('../../assets/images/camera.png')} style={styles.cameraIcon} />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.verifyButton}>
+      <TouchableOpacity style={styles.verifyButton} onPress={launchCamera}>
         <Text style={styles.verifyText}>Verify with ID card</Text>
-        <Image
-          source={require('../../assets/images/camera.png')}
-          style={styles.cameraIcon}
-        />
+        <Image source={require('../../assets/images/camera.png')} style={styles.cameraIcon} />
       </TouchableOpacity>
 
       <Text style={styles.noteText}>
@@ -64,6 +79,7 @@ export default function ProfileVerification(): JSX.Element {
     </View>
   )
 }
+
 
 type Style = {
   [key: string]: ViewStyle | TextStyle

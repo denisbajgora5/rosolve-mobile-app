@@ -6,6 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 
@@ -49,17 +52,24 @@ export default function ProfileNameScreen() {
       const result = await response.json()
       console.log('Server response:', result)
 
-      if (response.ok && result.success) {
-        alert('Signup successful!')
-        router.push({
-          pathname: '/passenger-side/profile-verification',
-          params: {
-            userData: JSON.stringify(userData),
+      if (response.ok && result.message?.toLowerCase().includes('success')) {
+        Alert.alert('Signup successful!', result.message, [
+          {
+            text: 'OK',
+            onPress: () => {
+              router.push({
+                pathname: '/passenger-side/profile-verification',
+                params: {
+                  userData: JSON.stringify(userData),
+                },
+              })
+            },
           },
-        })
+        ])
       } else {
-        alert(result.message || 'Signup failed')
+        Alert.alert('Signup failed', result.message || 'Something went wrong.')
       }
+      
     } catch (error) {
       console.error('Error sending to backend:', error)
       alert('Something went wrong. Please try again.')
@@ -67,56 +77,62 @@ export default function ProfileNameScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>
-        Thank you for signing up!{'\n'}
-        <Text style={styles.bold}>Please tell us your name to continue.</Text>
-      </Text>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Text style={styles.heading}>
+          Thank you for signing up!{'\n'}
+          <Text style={styles.bold}>Please tell us your name to continue.</Text>
+        </Text>
 
-      <Text style={styles.label}>Your first name:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Jane"
-        value={firstName}
-        onChangeText={setFirstName}
-      />
+        <Text style={styles.label}>Your first name:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Jane"
+          value={firstName}
+          onChangeText={setFirstName}
+        />
 
-      <Text style={styles.label}>Your last name:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Doe"
-        value={lastName}
-        onChangeText={setLastName}
-      />
+        <Text style={styles.label}>Your last name:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Doe"
+          value={lastName}
+          onChangeText={setLastName}
+        />
 
-      <Text style={styles.label}>Your email (Gmail only):</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="example@gmail.com"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
+        <Text style={styles.label}>Your email (Gmail only):</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="example@gmail.com"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
 
-      <TouchableOpacity
-        style={[styles.continueButton, !isFormValid && styles.disabledButton]}
-        onPress={handleContinue}
-        disabled={!isFormValid}
-      >
-        <Text style={styles.continueText}>Continue</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.continueButton, !isFormValid && styles.disabledButton]}
+          onPress={handleContinue}
+          disabled={!isFormValid}
+        >
+          <Text style={styles.continueText}>Continue</Text>
+        </TouchableOpacity>
 
-      <Text style={styles.footer}>
-        All data collected is stored privately and only used to protect the safety of you and others. © Team Rosolve.
-      </Text>
-    </View>
+        <Text style={styles.footer}>
+          All data collected is stored privately and only used to protect the safety of you and others. © Team Rosolve.
+        </Text>
+      </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  scrollContainer: {
+    flexGrow: 1,
     backgroundColor: '#fff',
     padding: 24,
     justifyContent: 'center',
@@ -161,5 +177,6 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
     marginTop: 40,
+    marginBottom: 20,
   },
 })
