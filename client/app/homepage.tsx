@@ -5,6 +5,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Platform, Image, SafeAreaView
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { Animated, Pressable } from 'react-native';
 import { useEffect } from 'react';
+import MapView, { Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
 
 
 
@@ -54,6 +56,11 @@ export default function HomePage() {
   const [greeting, setGreeting] = useState('');
   const userName = 'Midas'; // Replace with dynamic value later
 
+  // State for tracking user's current location
+  const [location, setLocation] = useState<Location.LocationObjectCoords | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour < 12) setGreeting('Good morning');
@@ -61,6 +68,28 @@ export default function HomePage() {
     else setGreeting('Good evening');
   }, []);
 
+  useEffect(() => {
+    let subscriber: Location.LocationSubscription | undefined;
+  
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+  
+      const loc = await Location.getCurrentPositionAsync({});
+      console.log("📍 Current location:", loc.coords);
+      setLocation(loc.coords);
+    })();
+  
+    return () => {
+      subscriber?.remove();
+    };
+  }, []);
+  
+  
+  
   // Location options
   const recentPlaces = ['📍 123 Oxford Street', '📍 Home', '📍 Starbucks - Camden'];
   const smartSuggestions = ['🏢 Work', '🏋️ Gym', '🛒 Grocery Store'];
@@ -72,12 +101,36 @@ export default function HomePage() {
     <SafeAreaView style={styles.container}>
       <View style={{ flex: 1, position: 'relative' }}>
 
-      {/* Map image placeholder */}
-      <Image
-        source={require('../assets/images/MapPlaceholder.png')}
-        style={styles.mapImage}
-        resizeMode="cover"
-      />
+      {/* Live location-tracking map using Expo Location and react-native-maps */}
+      <View style={{ flex: 1, minHeight: 300 }}>
+        {location ? (
+          <MapView
+            style={{ flex:1 }}
+            region={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+              latitudeDelta: 0.005,
+              longitudeDelta: 0.005,
+              }}
+            showsUserLocation={true}
+            followsUserLocation={true}
+          >
+            <Marker
+              coordinate={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+              }}
+              title="You are here"
+              description="Current location"
+            />
+          </MapView>
+        ) : (
+          <View style={styles.placeholder}>
+            <Text>Fetching current location...</Text>
+          </View>
+        )}
+      </View>
+
 
       {/* Greeting */}
     <View style={styles.greetingContainer}>
