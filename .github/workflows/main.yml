@@ -1,28 +1,38 @@
-name: Universal Test Runner
+name: Universal Test Runner (Client & Server)
 
 on:
   push:
-    branches:
-      - '**'
+    branches: [ '**' ]
   pull_request:
-    branches:
-      - '**'
+    branches: [ '**' ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Install dependencies
+      # CLIENT
+      - name: Install Client dependencies
+        working-directory: client
         run: npm install
 
-      - name: Run tests
+      - name: Run Client tests
+        working-directory: client
         run: npm test
 
+      # SERVER
+      - name: Install Server dependencies
+        working-directory: server
+        run: npm install
+
+      - name: Run Server tests
+        working-directory: server
+        run: npm test
