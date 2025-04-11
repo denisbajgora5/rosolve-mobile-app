@@ -9,6 +9,8 @@ import {
   Image,
 } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
+import CameraIcon from '../assets/images/camera.png';
+
 
 export default function ProfileVerification(): JSX.Element {
   const { userData } = useLocalSearchParams()
@@ -25,18 +27,12 @@ export default function ProfileVerification(): JSX.Element {
 
       <TouchableOpacity style={styles.verifyButton}>
         <Text style={styles.verifyText}>Verify with passport</Text>
-        <Image
-          source={require('../assets/images/camera.png')}
-          style={styles.cameraIcon}
-        />
+        <Image source={CameraIcon} style={styles.cameraIcon} />
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.verifyButton}>
         <Text style={styles.verifyText}>Verify with ID card</Text>
-        <Image
-          source={require('../assets/images/camera.png')}
-          style={styles.cameraIcon}
-        />
+        <Image source={CameraIcon} style={styles.cameraIcon} />
       </TouchableOpacity>
 
       <Text style={styles.noteText}>

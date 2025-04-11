@@ -10,6 +10,8 @@ import {
   TextStyle,
   ViewStyle,
 } from 'react-native'
+import EmailIcon from '../assets/images/email.png';
+import PinIcon from '../assets/images/pin.png';
 
 export default function DriverRegistration(): JSX.Element {
   const [phone, setPhone] = useState('')
@@ -51,10 +53,7 @@ export default function DriverRegistration(): JSX.Element {
       {/* Email Field */}
       <Text style={styles.label}>Enter your email here</Text>
       <View style={styles.inputRow}>
-        <Image
-          source={require('../assets/images/email.png')}
-          style={styles.icon}
-        />
+      <Image source={EmailIcon} style={styles.icon} />
         <TextInput
           style={styles.input}
           placeholder="jane@gmail.com"
@@ -67,10 +66,7 @@ export default function DriverRegistration(): JSX.Element {
       {/* City Field */}
       <Text style={styles.label}>City</Text>
       <View style={styles.inputRow}>
-        <Image
-          source={require('../assets/images/pin.png')}
-          style={styles.icon}
-        />
+      <Image source={PinIcon} style={styles.icon} />
         <TextInput
           style={styles.input}
           placeholder="Dublin"
