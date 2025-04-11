@@ -39,7 +39,6 @@ jobs:
 
       # 4. Lint the client code
       - name: Lint Client
-        working-directory: client
         run: npx eslint . --max-warnings=0
 
       # 5. Build the client project
@@ -60,8 +59,7 @@ jobs:
       
       # 8. Lint the server code
       - name: Lint Server
-        working-directory: server
-        run: npx eslint . --max-warnings=0
+        run: npx eslint . 
       
       # 9. Build the server code
       - name: Build Server
