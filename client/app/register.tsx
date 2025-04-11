@@ -13,19 +13,21 @@ import { router } from 'expo-router'
 import * as Google from 'expo-auth-session/providers/google'
 import * as Facebook from 'expo-auth-session/providers/facebook'
 import * as WebBrowser from 'expo-web-browser'
+import GoogleIcon from '../assets/images/google.png';
+import FacebookIcon from '../assets/images/facebook.png';
 
 WebBrowser.maybeCompleteAuthSession()
 
 export default function RegisterPage(): JSX.Element {
   const [phoneNumber, setPhoneNumber] = useState<string>('')
 
-  const [googleRequest, googleResponse, promptGoogle] = Google.useAuthRequest({
+  const [_googleRequest, googleResponse, promptGoogle] = Google.useAuthRequest({
     expoClientId: 'YOUR_EXPO_CLIENT_ID.apps.googleusercontent.com',
     iosClientId: 'YOUR_IOS_CLIENT_ID.apps.googleusercontent.com',
     androidClientId: 'YOUR_ANDROID_CLIENT_ID.apps.googleusercontent.com',
   })
 
-  const [fbRequest, fbResponse, promptFacebook] = Facebook.useAuthRequest({
+  const [_fbRequest, fbResponse, promptFacebook] = Facebook.useAuthRequest({
     clientId: 'YOUR_FACEBOOK_APP_ID',
   })
 
@@ -137,14 +139,14 @@ export default function RegisterPage(): JSX.Element {
 
       <TouchableOpacity style={styles.oauthButton} onPress={() => promptGoogle()}>
         <View style={styles.oauthContent}>
-          <Image source={require('../assets/images/google.png')} style={styles.oauthIcon} />
+          <Image source={GoogleIcon} style={styles.oauthIcon} />
           <Text style={styles.oauthText}>Log in with Google</Text>
         </View>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.oauthButton} onPress={() => promptFacebook()}>
         <View style={styles.oauthContent}>
-          <Image source={require('../assets/images/facebook.png')} style={styles.oauthIcon} />
+          <Image source={FacebookIcon} style={styles.oauthIcon} />
           <Text style={styles.oauthText}>Log in with Facebook</Text>
         </View>
       </TouchableOpacity>
