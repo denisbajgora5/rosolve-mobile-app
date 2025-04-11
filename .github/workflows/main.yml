@@ -12,66 +12,64 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Checks the code from the repository
+      # 1. Checkout Code
       - name: Checkout code
         uses: actions/checkout@v3
 
-    # 2. Set up Node.js environment (for both client and server)
+      # 2. Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-    
-    # 3. Cache Node Modules (speeds up builds)
+
+      # 3. Cache Node Modules
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node- 
-        
-      ### CLIENT SECTION ###
-      # 3. Install client dependencies
+            ${{ runner.os }}-node-
+
+      # 4. Install root dependencies (ESLint config + shared deps)
+      - name: Install root dependencies
+        run: npm install
+
+      # 5. Install client dependencies
       - name: Install Client dependencies
         working-directory: client
         run: npm install
 
-      # 4. Lint the client code
-      - name: Lint Client
-        run: npx eslint . --max-warnings=0
-
-      # 5. Build the client project
-      - name: Build Client
-        working-directory: client
-        run: npm run build
-      
-      # 6. Run client tests (doesn't block if none exist)
-      - name: Test Client
-        working-directory: client
-        run: npm test -- --passWithNoTests
-
-      ### SERVER SECTION ###
-      # 7. Install server dependencies
+      # 6. Install server dependencies
       - name: Install Server dependencies
         working-directory: server
         run: npm install
-      
-      # 8. Lint the server code
-      - name: Lint Server
-        run: npx eslint . 
-      
-      # 9. Build the server code
+
+      # 7. Lint entire project using centralized config
+      - name: Lint Codebase
+        run: npm run lint
+
+      # 8. Build client
+      - name: Build Client
+        working-directory: client
+        run: npm run build
+
+      # 9. Build server
       - name: Build Server
         working-directory: server
         run: npm run build
 
-      # 10. Run server tests
+      # 10. Test client
+      - name: Test Client
+        working-directory: client
+        run: npm test -- --passWithNoTests
+
+      # 11. Test server
       - name: Test Server
         working-directory: server
         run: npm test -- --passWithNoTests
-      
-      # 11. Type Check Server
+
+      # 12. Type Check Server
       - name: Type Check Server
         working-directory: server
         run: npx tsc --noEmit
