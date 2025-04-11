@@ -1,4 +1,4 @@
-name: Universal Test Runner (Client & Server)
+name: CI - Lint, Build, and Test (Client & Server)
 
 on:
   push:
@@ -7,32 +7,73 @@ on:
     branches: [ '**' ]
 
 jobs:
-  test:
+  ci:
+    name: Client & Server CI
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+    # 1. Checks the code from the repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
+    # 2. Set up Node.js environment (for both client and server)
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      # CLIENT
+    
+    # 3. Cache Node Modules (speeds up builds)
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node- 
+        
+      ### CLIENT SECTION ###
+      # 3. Install client dependencies
       - name: Install Client dependencies
         working-directory: client
         run: npm install
 
-      - name: Run Client tests
+      # 4. Lint the client code
+      - name: Lint Client
         working-directory: client
-        run: npm test
+        run: npx eslint . --max-warnings=0
 
-      # SERVER
+      # 5. Build the client project
+      - name: Build Client
+        working-directory: client
+        run: npm run build
+      
+      # 6. Run client tests (doesn't block if none exist)
+      - name: Test Client
+        working-directory: client
+        run: npm test -- --passWithNoTests
+
+      ### SERVER SECTION ###
+      # 7. Install server dependencies
       - name: Install Server dependencies
         working-directory: server
         run: npm install
-
-      - name: Run Server tests
+      
+      # 8. Lint the server code
+      - name: Lint Server
         working-directory: server
-        run: npm test
+        run: npx eslint . --max-warnings=0
+      
+      # 9. Build the server code
+      - name: Build Server
+        working-directory: server
+        run: npm run build
+
+      # 10. Run server tests
+      - name: Test Server
+        working-directory: server
+        run: npm test -- --passWithNoTests
+      
+      # 11. Type Check Server
+      - name: Type Check Server
+        working-directory: server
+        run: npx tsc --noEmit
