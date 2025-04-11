@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native'
-import * as SecureStore from 'expo-secure-store';
 import { router } from 'expo-router'
 
 export default function UserSelectionPage() {
