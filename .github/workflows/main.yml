@@ -61,7 +61,7 @@ jobs:
       # 8. Lint the server code
       - name: Lint Server
         working-directory: server
-        run: npx eslint . --max-warnings=0
+        run: npx eslint . --max-warnings=0 --ignore-path .eslintignore
       
       # 9. Build the server code
       - name: Build Server
