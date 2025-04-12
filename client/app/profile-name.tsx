@@ -6,15 +6,41 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 
 export default function ProfileNameScreen() {
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
+  const {
+    firstName: paramFirstName = '',
+    lastName: paramLastName = '',
+    phoneNumber: paramPhoneNumber = '',
+  } = useLocalSearchParams()
+
+  const [firstName, setFirstName] = useState(paramFirstName)
+  const [lastName, setLastName] = useState(paramLastName)
+  const [email, setEmail] = useState('')
+  const phoneNumber = paramPhoneNumber
+
+  const isValidEmail = (email: string) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email)
+
+  const isFormValid =
+    firstName.trim() !== '' &&
+    lastName.trim() !== '' &&
+    isValidEmail(email)
 
   const handleContinue = () => {
-    // You can add validation or send data later
-    router.push('/profile-verification')
+    const userData = {
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+    }
+
+    router.push({
+      pathname: '/profile-verification',
+      params: {
+        userData: JSON.stringify(userData),
+      },
+    })
   }
 
   return (
@@ -40,7 +66,21 @@ export default function ProfileNameScreen() {
         onChangeText={setLastName}
       />
 
-      <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
+      <Text style={styles.label}>Your email (Gmail only):</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="example@gmail.com"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+
+      <TouchableOpacity
+        style={[styles.continueButton, !isFormValid && styles.disabledButton]}
+        onPress={handleContinue}
+        disabled={!isFormValid}
+      >
         <Text style={styles.continueText}>Continue</Text>
       </TouchableOpacity>
 
@@ -84,6 +124,9 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
+  },
+  disabledButton: {
+    backgroundColor: '#ccc',
   },
   continueText: {
     color: '#fff',

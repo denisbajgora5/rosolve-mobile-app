@@ -1,0 +1,75 @@
+name: CI - Lint, Build, and Test (Client & Server)
+
+on:
+  push:
+    branches: [ '**' ]
+  pull_request:
+    branches: [ '**' ]
+
+jobs:
+  ci:
+    name: Client & Server CI
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout Code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # 3. Cache Node Modules
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # 4. Install root dependencies (ESLint config + shared deps)
+      - name: Install root dependencies
+        run: npm install
+
+      # 5. Install client dependencies
+      - name: Install Client dependencies
+        working-directory: client
+        run: npm install
+
+      # 6. Install server dependencies
+      - name: Install Server dependencies
+        working-directory: server
+        run: npm install
+
+      # 7. Lint entire project using centralized config
+      - name: Lint Codebase
+        run: npm run lint
+
+      # 8. Build client
+      - name: Build Client
+        working-directory: client
+        run: npm run build
+
+      # 9. Build server
+      - name: Build Server
+        working-directory: server
+        run: npm run build
+
+      # 10. Test client
+      - name: Test Client
+        working-directory: client
+        run: npm test -- --passWithNoTests
+
+      # 11. Test server
+      - name: Test Server
+        working-directory: server
+        run: npm test -- --passWithNoTests
+
+      # 12. Type Check Server
+      - name: Type Check Server
+        working-directory: server
+        run: npx tsc --noEmit

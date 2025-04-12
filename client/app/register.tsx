@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   View,
   Text,
@@ -10,37 +10,114 @@ import {
   ViewStyle,
 } from 'react-native'
 import { router } from 'expo-router'
+import * as Google from 'expo-auth-session/providers/google'
+import * as Facebook from 'expo-auth-session/providers/facebook'
+import * as WebBrowser from 'expo-web-browser'
+import GoogleIcon from '../assets/images/google.png';
+import FacebookIcon from '../assets/images/facebook.png';
+
+WebBrowser.maybeCompleteAuthSession()
 
 export default function RegisterPage(): JSX.Element {
   const [phoneNumber, setPhoneNumber] = useState<string>('')
+
+  const [_googleRequest, googleResponse, promptGoogle] = Google.useAuthRequest({
+    expoClientId: 'YOUR_EXPO_CLIENT_ID.apps.googleusercontent.com',
+    iosClientId: 'YOUR_IOS_CLIENT_ID.apps.googleusercontent.com',
+    androidClientId: 'YOUR_ANDROID_CLIENT_ID.apps.googleusercontent.com',
+  })
+
+  const [_fbRequest, fbResponse, promptFacebook] = Facebook.useAuthRequest({
+    clientId: 'YOUR_FACEBOOK_APP_ID',
+  })
 
   const handlePhoneInput = (text: string) => {
     const digitsOnly = text.replace(/[^0-9]/g, '')
     setPhoneNumber(digitsOnly)
   }
 
-  const handleCreateAccount = () => {
+  const isPhoneValid = (number: string) => {
+    let formatted = number
+    if (formatted.startsWith('0')) {
+      formatted = formatted.substring(1)
+    }
     const irishPhoneRegex = /^8[3-9][0-9]{7}$/
-    const isValid = irishPhoneRegex.test(phoneNumber)
+    return irishPhoneRegex.test(formatted)
+  }
 
-    if (isValid) {
-      router.push('/profile-name')
+  const handleCreateAccount = () => {
+    if (isPhoneValid(phoneNumber)) {
+      router.push({
+        pathname: '/profile-name',
+        params: {
+          phoneNumber,
+        },
+      })
     } else {
       alert('Please enter a valid Irish mobile number')
     }
   }
 
+  useEffect(() => {
+    const handleGoogleLogin = async () => {
+      if (googleResponse?.type === 'success') {
+        if (!isPhoneValid(phoneNumber)) {
+          alert('Please enter a valid Irish phone number before logging in with Google.')
+          return
+        }
+
+        const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+          headers: { Authorization: `Bearer ${googleResponse.authentication?.accessToken}` },
+        })
+        const user = await res.json()
+        const [first, last] = user.name.split(' ')
+
+        router.push({
+          pathname: '/profile-name',
+          params: {
+            firstName: first,
+            lastName: last,
+            phoneNumber,
+          },
+        })
+      }
+    }
+
+    const handleFacebookLogin = async () => {
+      if (fbResponse?.type === 'success') {
+        if (!isPhoneValid(phoneNumber)) {
+          alert('Please enter a valid Irish phone number before logging in with Facebook.')
+          return
+        }
+
+        const token = fbResponse.authentication?.accessToken
+        const res = await fetch(`https://graph.facebook.com/me?fields=name&access_token=${token}`)
+        const user = await res.json()
+        const [first, last] = user.name.split(' ')
+
+        router.push({
+          pathname: '/profile-name',
+          params: {
+            firstName: first,
+            lastName: last,
+            phoneNumber,
+          },
+        })
+      }
+    }
+
+    handleGoogleLogin()
+    handleFacebookLogin()
+  }, [googleResponse, fbResponse])
+
   return (
     <View style={styles.container}>
-      {/* Logo Placeholder */}
       <View style={styles.logoPlaceholder}>
         <Text style={styles.logoText}>Logo</Text>
       </View>
 
-      {/* Title */}
       <Text style={styles.title}>Enter your number here</Text>
 
-      {/* Phone Input */}
       <View style={styles.phoneInputContainer}>
         <View style={styles.countryCode}>
           <Text style={styles.countryText}>🇮🇪 +353</Text>
@@ -54,35 +131,26 @@ export default function RegisterPage(): JSX.Element {
         />
       </View>
 
-      {/* Create Account Button */}
       <TouchableOpacity style={styles.createButton} onPress={handleCreateAccount}>
         <Text style={styles.createButtonText}>Create account</Text>
       </TouchableOpacity>
 
       <Text style={styles.orText}>OR</Text>
 
-      {/* OAuth Buttons */}
-      <TouchableOpacity style={styles.oauthButton}>
+      <TouchableOpacity style={styles.oauthButton} onPress={() => promptGoogle()}>
         <View style={styles.oauthContent}>
-          <Image
-            source={require('../assets/images/google.png')}
-            style={styles.oauthIcon}
-          />
+          <Image source={GoogleIcon} style={styles.oauthIcon} />
           <Text style={styles.oauthText}>Log in with Google</Text>
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.oauthButton}>
+      <TouchableOpacity style={styles.oauthButton} onPress={() => promptFacebook()}>
         <View style={styles.oauthContent}>
-          <Image
-            source={require('../assets/images/facebook.png')}
-            style={styles.oauthIcon}
-          />
+          <Image source={FacebookIcon} style={styles.oauthIcon} />
           <Text style={styles.oauthText}>Log in with Facebook</Text>
         </View>
       </TouchableOpacity>
 
-      {/* Footer */}
       <Text style={styles.footerText}>
         Terms & Conditions apply. Lorem ipsum etc etc etc. Copyright Rooslove Ltd.
       </Text>
@@ -174,12 +242,12 @@ const styles = StyleSheet.create<Style>({
   oauthContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',  // ✅ Center text+icon horizontally
+    justifyContent: 'center',
     position: 'relative',
   },
   oauthIcon: {
     position: 'absolute',
-    left: 0,                   // ✅ Keep icon to the far left
+    left: 0,
     width: 24,
     height: 24,
     resizeMode: 'contain',

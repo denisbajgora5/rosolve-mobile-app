@@ -10,15 +10,15 @@ export default function SelectRolePage() {
 
       <View style={styles.buttonRow}>
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>I'm a passenger</Text>
+          <Text style={styles.buttonText}>I&apos;m a passenger</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>I'm a driver</Text>
+          <Text style={styles.buttonText}>I&apos;m a driver</Text>
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.loginTextBox}>
-        <Text style={styles.loginText}>"Already have an account? Log in"</Text>
+        <Text style={styles.loginText}>Already have an account? Log in</Text>
       </TouchableOpacity>
 
       <View style={styles.features}>

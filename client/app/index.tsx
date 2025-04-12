@@ -43,7 +43,7 @@ export default function UserSelectionPage() {
           onPress={() => router.push('/register')}
         >
           <Text style={styles.buttonText}>
-            I'm a <Text style={styles.bold}>Passenger</Text>
+            I&apos;m a <Text style={styles.bold}>Passenger</Text>
           </Text>
         </TouchableOpacity>
 
@@ -52,7 +52,7 @@ export default function UserSelectionPage() {
           onPress={() => router.push('./driver-registration')}
         >
           <Text style={styles.buttonText}>
-            I'm a <Text style={styles.bold}>Driver</Text>
+            I&apos;m a <Text style={styles.bold}>Driver</Text>
           </Text>
         </TouchableOpacity>
 
